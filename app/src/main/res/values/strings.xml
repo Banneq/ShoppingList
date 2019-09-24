@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">ShoppingList</string>
+    <string name="Title">Lista Zakupów</string>
+    <string name="title_info">Zaloguj się lub stwórz nowe konto</string>
+    <string name="enter_mail">wprowadź e-mail</string>
+    <string name="enter_password">wprowadź hasło</string>
+    <string name="create_new_acc">Stwórz nowe konto</string>
+    <string name="recall_password">Zapomniałeś hasła? Wygeneruj nowe.</string>
+    <string name="registration_info">Stwórz nowe konto wypełniając formularz.</string>
+    <string name="confirm_password">potwierdź hasło</string>
+    <string name="create_account">STWÓRZ KONTO</string>
+    <string name="enter_nickname">wprowadź pseudonim</string>
+</resources>
