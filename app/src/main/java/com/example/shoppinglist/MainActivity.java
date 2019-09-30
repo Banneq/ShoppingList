@@ -1,16 +1,93 @@
 package com.example.shoppinglist;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.backendless.Backendless;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String LOGGED_OUT = "Pomyślnie wylogowano.";
+    private static final String ERROR = "Błąd: ";
+    private static final String LOGGING_OUT = "Trwa wylogowywanie...proszę czekać...";
 
+    private View progressView, loginFormView;
+    private TextView tvLoad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        findViews();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.activity_main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.logOutIcon:
+                logoutUser();
+        }
+        return true;
+    }
+
+    public void btnListManagementListener(View view) {
+        Intent proceed = new Intent(MainActivity.this, ListManagement.class);
+        startActivity(proceed);
+    }
+
+    private void logoutUser() {
+        showProgress(true);
+        tvLoad.setText(LOGGING_OUT);
+        Backendless.UserService.logout(new AsyncCallback<Void>() {
+            @Override
+            public void handleResponse(Void response) {
+                ApplicationClass.user = null;
+                showToast(LOGGED_OUT);
+                Intent proceed = new Intent(MainActivity.this, Login.class);
+                startActivity(proceed);
+                MainActivity.this.finish();
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                showToast(ERROR + fault.getMessage());
+                showProgress(false);
+            }
+        });
+    }
+
+    private void showToast (String text) {
+        Toast.makeText(MainActivity.this, text, Toast.LENGTH_LONG).show();
+    }
+
+    private void showProgress(final boolean show) {
+        progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        tvLoad.setVisibility(show ? View.VISIBLE : View.GONE);
+        loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+    }
+
+    private void findViews() {
+        progressView = findViewById(R.id.login_progress);
+        tvLoad = findViewById(R.id.tvLoad);
+        loginFormView = findViewById(R.id.login_form);
     }
 }

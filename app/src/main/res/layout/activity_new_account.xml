@@ -114,6 +114,7 @@
             android:background="@drawable/button_shape"
             android:onClick="btnCreateListener"
             android:text="@string/create_account"
+            android:textColor="#FFFFFF"
             android:textSize="14sp" />
     </LinearLayout>
 

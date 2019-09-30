@@ -10,4 +10,6 @@
     <string name="confirm_password">potwierdź hasło</string>
     <string name="create_account">STWÓRZ KONTO</string>
     <string name="enter_nickname">wprowadź pseudonim</string>
+    <string name="enter_product_name">nazwa produktu</string>
+    <string name="quantity">ilość</string>
 </resources>
