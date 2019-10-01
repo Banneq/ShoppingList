@@ -21,8 +21,6 @@ public class ListManagement extends AppCompatActivity {
     private TextView tvLoad;
     private RecyclerView rvProducts;
     private RecyclerView.Adapter rvAdapter;
-    private RecyclerView.LayoutManager rvLayoutManager;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +32,8 @@ public class ListManagement extends AppCompatActivity {
     }
 
     private void setUpRecyclerView() {
+        RecyclerView.LayoutManager rvLayoutManager = new LinearLayoutManager(this);
         rvProducts.setHasFixedSize(true);
-        rvLayoutManager = new LinearLayoutManager(this);
         rvProducts.setLayoutManager(rvLayoutManager);
         rvAdapter = new ListRecyclerViewAdapter(this, ApplicationClass.lastManagedList);
         rvProducts.setAdapter(rvAdapter);

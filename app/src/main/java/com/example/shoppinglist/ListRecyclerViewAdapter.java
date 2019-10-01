@@ -128,6 +128,11 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
         holder.etProductName.setText(product.getProductName());
         holder.etQuantity.setText(product.getQuantity());
         holder.tvUnit.setText(product.getUnit());
+
+        if (product.getUnit() != null) {
+            holder.tvUnit.setVisibility(View.VISIBLE);
+            holder.snrUnit.setVisibility(View.GONE);
+        }
     }
 
     @Override
