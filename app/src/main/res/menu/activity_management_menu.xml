@@ -2,4 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item
+        android:id="@+id/saveListItem"
+        android:orderInCategory="300"
+        android:title="@string/save_list_on_acc"
+        android:icon="@drawable/save_icon"
+        app:showAsAction="ifRoom">
+    </item>
+
+    <item
+        android:id="@+id/loadListItem"
+        android:orderInCategory="350"
+        android:title="@string/load_list"
+        android:icon="@drawable/load_list_icon"
+        app:showAsAction="ifRoom">
+    </item>
 </menu>

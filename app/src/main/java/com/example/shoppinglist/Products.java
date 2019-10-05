@@ -3,8 +3,16 @@ package com.example.shoppinglist;
 import java.util.Date;
 
 public class Products {
-    private String productName, quantity, unit, objectId, ownerId;
+    private String productName, quantity, unit, objectId, ownerId, listName;
     private Date created, updated;
+
+    public String getListName() {
+        return listName;
+    }
+
+    public void setListName(String listName) {
+        this.listName = listName;
+    }
 
     public String getProductName() {
         return productName;
