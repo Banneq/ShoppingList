@@ -197,7 +197,6 @@ public class Login extends AppCompatActivity {
                     String userObjectId = UserIdStorageFactory.instance().getStorage().get();
                     tvLoad.setText(LOGIN_IN_PROGRESS);
                     login(userObjectId);
-                    showProgress(false);
                 } else {
                     showProgress(false);
                 }

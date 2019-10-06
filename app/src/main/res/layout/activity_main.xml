@@ -46,24 +46,13 @@
             app:srcCompat="@drawable/list_icon" />
 
         <Button
-            android:id="@+id/button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/button_shape"
-            android:text="TWOJA LISTA"
-            android:textColor="#FFFFFF" />
-
-        <Button
             android:id="@+id/button2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
+            android:layout_marginTop="60dp"
             android:layout_marginRight="20dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/button_shape"
             android:onClick="btnListManagementListener"
             android:text="ZARZĄDZANIE LISTAMI"
@@ -77,7 +66,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/button_shape"
-            android:text="USTAWIENIA KONTA"
+            android:text="@string/account_settings"
             android:textColor="#FFFFFF" />
     </LinearLayout>
 

@@ -13,6 +13,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.backendless.Backendless;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
+
 import java.util.List;
 
 public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerViewAdapter.ViewHolder> {
@@ -20,9 +24,6 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
     private List<Products> productsList;
     private View view;
     Context context;
-
-
-
 
     public ListRecyclerViewAdapter (Context context, List <Products> productsList) {
         this.productsList = productsList;
@@ -78,8 +79,13 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
             ivDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    productsList.remove((Products) itemView.getTag());
+                    Products product = (Products) itemView.getTag();
+                    productsList.remove(product);
                     notifyDataSetChanged();
+
+                    if (product.getObjectId() != null) {
+                        deleteProductFromDatabase(product);
+                    }
                 }
             });
         }
@@ -109,7 +115,22 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
             product.setProductName(etProductName.getText().toString().trim());
             product.setQuantity(etQuantity.getText().toString().trim());
             product.setUnit(snrUnit.getSelectedItem().toString());
+            product.setWasEdited(true);
             tvUnit.setText(product.getUnit());
+        }
+
+        private void deleteProductFromDatabase (Products product) {
+            String whereClause = "ownerId = '" + ApplicationClass.user.getUserId() + "' AND " +
+            "listName = '" + ApplicationClass.lastManagedListName + "' AND " +
+            "objectId = '" + product.getObjectId() + "'";
+
+            Backendless.Persistence.of(Products.class).remove(whereClause, new AsyncCallback<Integer>() {
+                @Override
+                public void handleResponse(Integer response) { }
+
+                @Override
+                public void handleFault(BackendlessFault fault) { }
+            });
         }
 
     }
@@ -129,11 +150,11 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
         holder.etQuantity.setText(product.getQuantity());
         holder.tvUnit.setText(product.getUnit());
 
-        if (product.getUnit() != null) {
-            holder.tvUnit.setVisibility(View.VISIBLE);
-            holder.snrUnit.setVisibility(View.GONE);
+        if (!product.getWasEdited() && !holder.isInEditMode) {
+            holder.ivEdit.performClick();
         }
     }
+
 
     @Override
     public int getItemCount() {

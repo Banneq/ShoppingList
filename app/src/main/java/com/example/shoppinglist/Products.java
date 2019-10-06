@@ -5,6 +5,7 @@ import java.util.Date;
 public class Products {
     private String productName, quantity, unit, objectId, ownerId, listName;
     private Date created, updated;
+    private boolean wasEdited = false;
 
     public String getListName() {
         return listName;
@@ -13,6 +14,10 @@ public class Products {
     public void setListName(String listName) {
         this.listName = listName;
     }
+
+    public void setWasEdited(boolean wasEdited) {this.wasEdited = wasEdited;}
+
+    public boolean getWasEdited() {return wasEdited;}
 
     public String getProductName() {
         return productName;

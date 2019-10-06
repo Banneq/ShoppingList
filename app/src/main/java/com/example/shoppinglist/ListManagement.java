@@ -32,7 +32,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ListManagement extends AppCompatActivity {
+public class ListManagement extends AppCompatActivity{
     private final static String LIST = "Lista: ";
     private final static String LIST_SAVE = "Przypis listy do konta";
     private final static String ENTER_LIST_NAME = "Wprowadź nazwę dla swojej listy";
@@ -43,6 +43,7 @@ public class ListManagement extends AppCompatActivity {
     private final static String ERROR = "Błąd: ";
     private final static String LOAD_LIST = "Załaduj listę";
     private final static String DOWNLOADING_LIST_NAMES = "Pobieranie nazw...proszę czekać...";
+    private final static String FILL_ALL_FIELDS = "Wypełnij wszystkie pola produktów!";
 
 
     private View progressView, loginFormView;
@@ -99,12 +100,15 @@ public class ListManagement extends AppCompatActivity {
         loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
     }
 
-
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.saveListItem:
-                saveList();
+                if (checkIfAllFieldsAreFilled()) {
+                    saveList();
+                } else {
+                    showToast(FILL_ALL_FIELDS);
+                }
                 break;
             case R.id.loadListItem:
                 listNames = getListNames();
@@ -114,20 +118,13 @@ public class ListManagement extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void saveListOnServer () {
-        showProgress(true);
-        tvLoad.setText(SAVING_LIST);
+    private boolean checkIfAllFieldsAreFilled() {
         for (Products product: ApplicationClass.lastManagedList) {
-            Backendless.Data.of(Products.class).save(product, new AsyncCallback<Products>() {
-                @Override
-                public void handleResponse(Products response){}
-                @Override
-                public void handleFault(BackendlessFault fault) {
-                    Toast.makeText(ListManagement.this, ERROR + fault.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            });
+            if (product.getProductName() == null || product.getQuantity() == null || product.getUnit() == null) {
+                return false;
+            }
         }
-        showProgress(false);
+        return true;
     }
 
     private void saveList () {
@@ -148,6 +145,22 @@ public class ListManagement extends AppCompatActivity {
                 })
                 .setNegativeButton(CANCEL, null)
                 .show();
+    }
+
+    private void saveListOnServer () {
+        showProgress(true);
+        tvLoad.setText(SAVING_LIST);
+        for (Products product: ApplicationClass.lastManagedList) {
+            Backendless.Data.of(Products.class).save(product, new AsyncCallback<Products>() {
+                @Override
+                public void handleResponse(Products response){}
+                @Override
+                public void handleFault(BackendlessFault fault) {
+                    Toast.makeText(ListManagement.this, ERROR + fault.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+        showProgress(false);
     }
 
     private void updateListNameInProductList() {
@@ -178,6 +191,7 @@ public class ListManagement extends AppCompatActivity {
 
             @Override
             public void handleFault(BackendlessFault fault) {
+                Toast.makeText(ListManagement.this, ERROR + fault.getMessage(), Toast.LENGTH_LONG).show();
                 showProgress(false);
             }
         });
@@ -239,7 +253,10 @@ public class ListManagement extends AppCompatActivity {
                 showProgress(false);
             }
         });
+    }
 
+    private void showToast (String text) {
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show();
     }
 
 }

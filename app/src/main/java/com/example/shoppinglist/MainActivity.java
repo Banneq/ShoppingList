@@ -18,9 +18,11 @@ import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String LOGGED_OUT = "Pomyślnie wylogowano.";
-    private static final String ERROR = "Błąd: ";
-    private static final String LOGGING_OUT = "Trwa wylogowywanie...proszę czekać...";
+    private final static String LOGGED_OUT = "Pomyślnie wylogowano.";
+    private final static String ERROR = "Błąd: ";
+    private final static String LOGGING_OUT = "Trwa wylogowywanie...proszę czekać...";
+    private final static String LOGGED_AS = "Zalogowano jako: ";
+    private final static String KEY_NAME = "name";
 
     private View progressView, loginFormView;
     private TextView tvLoad;
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.activity_main_menu, menu);
+        getSupportActionBar().setTitle(LOGGED_AS + ApplicationClass.user.getProperty(KEY_NAME));
         return true;
     }
 
