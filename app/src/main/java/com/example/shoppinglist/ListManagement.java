@@ -13,10 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,9 +22,7 @@ import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.DataQueryBuilder;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -44,6 +39,7 @@ public class ListManagement extends AppCompatActivity{
     private final static String LOAD_LIST = "Załaduj listę";
     private final static String DOWNLOADING_LIST_NAMES = "Pobieranie nazw...proszę czekać...";
     private final static String FILL_ALL_FIELDS = "Wypełnij wszystkie pola produktów!";
+    private final static String NO_LISTS = "Brak list do wczytania.";
 
 
     private View progressView, loginFormView;
@@ -81,6 +77,7 @@ public class ListManagement extends AppCompatActivity{
 
    public void ivAddListener(View view) {
         Products products = new Products();
+        products.setBeingEdited(true);
         ApplicationClass.lastManagedList.add(products);
         rvAdapter.notifyDataSetChanged();
    }
@@ -202,6 +199,12 @@ public class ListManagement extends AppCompatActivity{
     private void runAlertList () {
         final int[] checkedItem = {0};
         final String [] arrayListNames = setToArray(listNames);
+        if (arrayListNames.length == 0) {
+            showToast(NO_LISTS);
+            return;
+        }
+
+
         new AlertDialog.Builder(this)
                 .setTitle(PICK_LIST)
                 .setSingleChoiceItems(arrayListNames, checkedItem[0], new DialogInterface.OnClickListener() {

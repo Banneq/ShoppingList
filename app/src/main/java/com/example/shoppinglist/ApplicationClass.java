@@ -6,6 +6,7 @@ import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ApplicationClass extends Application {
     public static final String APPLICATION_ID = "D29A2D2D-7954-CA75-FF61-284806176A00";
@@ -13,7 +14,7 @@ public class ApplicationClass extends Application {
     public static final String SERVER_URL = "https://api.backendless.com";
     public static BackendlessUser user;
     public static String lastManagedListName = "bez nazwy";
-    public static ArrayList <Products> lastManagedList = new ArrayList<>();
+    public static List<Products> lastManagedList = new ArrayList<>();
 
     @Override
     public void onCreate() {

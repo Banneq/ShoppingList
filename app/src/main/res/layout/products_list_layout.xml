@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="30dp"
     android:layout_marginBottom="5dp"
     android:background="@color/colorPrimaryLight"
     android:orientation="horizontal">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="5dp"
@@ -56,15 +56,17 @@
                 android:layout_gravity="center"
                 android:layout_weight="2"
                 android:background="@color/colorPrimaryLight"
+                android:textAlignment="gravity"
                 android:gravity="center_horizontal" />
 
             <TextView
                 android:id="@+id/tvUnit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_gravity="center_horizontal"
                 android:layout_weight="2"
                 android:background="@color/colorPrimaryLight"
+                android:foregroundGravity="center_horizontal"
                 android:gravity="center_horizontal"
                 android:textSize="18sp"
                 android:visibility="gone" />

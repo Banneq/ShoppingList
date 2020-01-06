@@ -1,6 +1,8 @@
 package com.example.shoppinglist;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,9 +38,6 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
         private TextView tvUnit;
         private Spinner snrUnit;
         private ImageView ivDelete, ivEdit;
-        private boolean isInEditMode;
-
-
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -61,15 +60,16 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
             ivEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (!isInEditMode) {
+                    Products products = (Products) itemView.getTag();
+                    if (!products.getBeingEdited()) {
+                        products.setBeingEdited(true);
                         ivEdit.setImageResource(R.drawable.check_icon);
                         setAllEditable(true);
-                        isInEditMode = true;
                     } else {
+                        products.setBeingEdited(false);
                         ivEdit.setImageResource(R.drawable.edit_icon);
                         setNewValues();
                         setAllEditable(false);
-                        isInEditMode = false;
                     }
                 }
             });
@@ -104,6 +104,7 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
             if (editable) {
                 tvUnit.setVisibility(View.GONE);
                 snrUnit.setVisibility(View.VISIBLE);
+
             } else {
                 tvUnit.setVisibility(View.VISIBLE);
                 snrUnit.setVisibility(View.GONE);
@@ -115,8 +116,17 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
             product.setProductName(etProductName.getText().toString().trim());
             product.setQuantity(etQuantity.getText().toString().trim());
             product.setUnit(snrUnit.getSelectedItem().toString());
-            product.setWasEdited(true);
             tvUnit.setText(product.getUnit());
+            snrUnit.setSelection(getPositionOfItemInSpinner(product.getUnit()));
+        }
+
+        private int getPositionOfItemInSpinner(String unit) {
+            String [] units = context.getResources().getStringArray(R.array.units);
+            for (int i = 0; i < units.length; i++) {
+                if (units[i].equals(unit))
+                    return i;
+            }
+            return -1;
         }
 
         private void deleteProductFromDatabase (Products product) {
@@ -149,18 +159,12 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<ListRecyclerVi
         holder.etProductName.setText(product.getProductName());
         holder.etQuantity.setText(product.getQuantity());
         holder.tvUnit.setText(product.getUnit());
-
-        if (!product.getWasEdited() && !holder.isInEditMode) {
-            holder.ivEdit.performClick();
-        }
+        holder.setAllEditable(product.getBeingEdited());
+        holder.ivEdit.setImageResource((product.getBeingEdited())?R.drawable.check_icon:R.drawable.edit_icon);
     }
-
 
     @Override
     public int getItemCount() {
         return productsList.size();
     }
-
-
-
 }
