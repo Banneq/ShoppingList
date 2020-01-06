@@ -40,6 +40,7 @@ public class ListManagement extends AppCompatActivity{
     private final static String DOWNLOADING_LIST_NAMES = "Pobieranie nazw...proszę czekać...";
     private final static String FILL_ALL_FIELDS = "Wypełnij wszystkie pola produktów!";
     private final static String NO_LISTS = "Brak list do wczytania.";
+    private final static String CANNOT_SAVE_EMPTY_LIST = "Nie można zapisać pustej listy.";
 
 
     private View progressView, loginFormView;
@@ -101,11 +102,7 @@ public class ListManagement extends AppCompatActivity{
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.saveListItem:
-                if (checkIfAllFieldsAreFilled()) {
-                    saveList();
-                } else {
-                    showToast(FILL_ALL_FIELDS);
-                }
+                saveList();
                 break;
             case R.id.loadListItem:
                 listNames = getListNames();
@@ -125,6 +122,19 @@ public class ListManagement extends AppCompatActivity{
     }
 
     private void saveList () {
+        if (ApplicationClass.lastManagedList.size() == 0) {
+            showToast(CANNOT_SAVE_EMPTY_LIST);
+            return;
+        }
+        if (!checkIfAllFieldsAreFilled()) {
+            showToast(FILL_ALL_FIELDS);
+            return;
+        }
+
+        for (Products product: ApplicationClass.lastManagedList)
+            product.setBeingEdited(false);
+        rvAdapter.notifyDataSetChanged();
+
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         new AlertDialog.Builder(this)
@@ -231,7 +241,6 @@ public class ListManagement extends AppCompatActivity{
 
 
     private void loadListFromServer (String listName) {
-        final ArrayList <Products> products = new ArrayList<>();
         String whereClause = "ownerId = '" + ApplicationClass.user.getUserId() +
                 "' AND listName = '" + listName + "'";
         DataQueryBuilder dataQueryBuilder = DataQueryBuilder.create();

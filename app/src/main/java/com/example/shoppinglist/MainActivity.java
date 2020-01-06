@@ -17,6 +17,8 @@ import com.backendless.Backendless;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
     private final static String LOGGED_OUT = "Pomyślnie wylogowano.";
     private final static String ERROR = "Błąd: ";
@@ -64,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void handleResponse(Void response) {
                 ApplicationClass.user = null;
+                ApplicationClass.lastManagedList = new ArrayList<>();
+                ApplicationClass.lastManagedListName = "bez nazwy";
                 showToast(LOGGED_OUT);
                 Intent proceed = new Intent(MainActivity.this, Login.class);
                 startActivity(proceed);
