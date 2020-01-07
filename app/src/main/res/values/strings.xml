@@ -16,4 +16,5 @@
     <string name="load_list">Wczytaj listę</string>
     <string name="friends_management">ZNAJOMI</string>
     <string name="list_management">ZARZĄDZANIE LISTAMI</string>
+    <string name="add_friend">Dodaj znajomego.</string>
 </resources>
