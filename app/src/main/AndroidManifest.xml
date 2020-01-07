@@ -13,7 +13,9 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ListManagement"></activity>
+        <activity android:name=".friends_list_layout"></activity>
+        <activity android:name=".FriendsManagement" />
+        <activity android:name=".ListManagement" />
         <activity android:name=".NewAccount" />
         <activity android:name=".MainActivity" />
         <activity android:name=".Login">

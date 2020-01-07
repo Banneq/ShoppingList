@@ -14,5 +14,6 @@
     <string name="quantity">ilość</string>
     <string name="save_list_on_acc">Zapisz listę na swoim koncie</string>
     <string name="load_list">Wczytaj listę</string>
-    <string name="account_settings">USTAWIENIA KONTA</string>
+    <string name="friends_management">ZNAJOMI</string>
+    <string name="list_management">ZARZĄDZANIE LISTAMI</string>
 </resources>

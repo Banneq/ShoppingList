@@ -59,6 +59,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(proceed);
     }
 
+    public void btnFriendManagementListener(View view) {
+        Intent proceed = new Intent(MainActivity.this, FriendsManagement.class);
+        startActivity(proceed);
+    }
+
     private void logoutUser() {
         showProgress(true);
         tvLoad.setText(LOGGING_OUT);

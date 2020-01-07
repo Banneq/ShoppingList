@@ -55,7 +55,7 @@
             android:layout_marginBottom="20dp"
             android:background="@drawable/button_shape"
             android:onClick="btnListManagementListener"
-            android:text="ZARZĄDZANIE LISTAMI"
+            android:text="@string/list_management"
             android:textColor="#FFFFFF" />
 
         <Button
@@ -66,7 +66,8 @@
             android:layout_marginRight="20dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/button_shape"
-            android:text="@string/account_settings"
+            android:onClick="btnFriendManagementListener"
+            android:text="@string/friends_management"
             android:textColor="#FFFFFF" />
     </LinearLayout>
 
