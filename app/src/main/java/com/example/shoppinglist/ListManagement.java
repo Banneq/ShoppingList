@@ -41,7 +41,7 @@ public class ListManagement extends AppCompatActivity{
     private final static String FILL_ALL_FIELDS = "Wypełnij wszystkie pola produktów!";
     private final static String NO_LISTS = "Brak list do wczytania.";
     private final static String CANNOT_SAVE_EMPTY_LIST = "Nie można zapisać pustej listy.";
-
+    private final static String LIST_SAVED = "Lista pomyślnie zapisana.";
 
     private View progressView, loginFormView;
     private TextView tvLoad;
@@ -160,7 +160,9 @@ public class ListManagement extends AppCompatActivity{
         for (Products product: ApplicationClass.lastManagedList) {
             Backendless.Data.of(Products.class).save(product, new AsyncCallback<Products>() {
                 @Override
-                public void handleResponse(Products response){}
+                public void handleResponse(Products response){
+                    showToast(LIST_SAVED);
+                }
                 @Override
                 public void handleFault(BackendlessFault fault) {
                     Toast.makeText(ListManagement.this, ERROR + fault.getMessage(), Toast.LENGTH_LONG).show();
