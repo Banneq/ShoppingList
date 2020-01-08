@@ -1,4 +1,4 @@
-package com.example.shoppinglist;
+package com.example.shoppinglist.RecyclerViewAdapters;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,8 +18,18 @@ import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.DataQueryBuilder;
+import com.example.shoppinglist.Activities.ListManagement;
+import com.example.shoppinglist.ApplicationClass;
+import com.example.shoppinglist.Models.Friends;
+import com.example.shoppinglist.Models.Products;
+import com.example.shoppinglist.Models.SharedLists;
+import com.example.shoppinglist.R;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecyclerViewAdapter.ViewHolder> {
     private List<BackendlessUser> friends;
@@ -29,6 +39,8 @@ public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecy
     private final static String NUMBER_OF_LIST_PREFIX = "Liczba współdzielonych list: ";
     private final static String ALERT_DIALOG_TEXT = "Czy na pewno chcesz usunąć tego użytkownika z groma znajomych?";
     private final static String FRIEND_DELETED = "Użytkownik został usunięty z grona znajomych.";
+    private final static String ALERT_DIALOG2_TITLE = "Wybierz listę do udostępnienia: ";
+    private final static String LIST_HAS_BEED_SHARED = "Udostępniłeś swoją listę.";
 
     public FriendsRecyclerViewAdapter (Context context, List<BackendlessUser> friends) {
         this.context = (FriendsManagementContext) context;
@@ -43,16 +55,19 @@ public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecy
         private TextView name;
         private TextView sharedListsNumber;
         private ImageView ivDelete;
+        private ImageView ivShare;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             findViews();
             setIvDeleteListener();
+            setIvShareListener();
         }
 
         private void findViews() {
             name = view.findViewById(R.id.tvName);
             sharedListsNumber = view.findViewById(R.id.tvSharedListNumber);
             ivDelete = view.findViewById(R.id.ivDelete);
+            ivShare = view.findViewById(R.id.ivShare);
         }
 
         private void setIvDeleteListener() {
@@ -74,6 +89,7 @@ public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecy
             });
         }
 
+
         private void deleteFriend(final int pos) {
             final BackendlessUser friendToDelete = friends.get(pos);
             String whereClause = "ownerId = '" + ApplicationClass.user.getUserId() +
@@ -93,6 +109,88 @@ public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecy
                 @Override
                 public void handleFault(BackendlessFault fault) {
                     showToast("ERROR: " + fault.getMessage());
+                }
+            });
+        }
+
+        private void setIvShareListener() {
+            ivShare.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getListNames();
+                }
+            });
+        }
+
+        private void getListNames () {
+            String whereClause = "ownerId = '" + ApplicationClass.user.getUserId() + "'";
+            DataQueryBuilder dataQueryBuilder = DataQueryBuilder.create();
+            dataQueryBuilder.setWhereClause(whereClause);
+
+            Backendless.Persistence.of(Products.class).find(dataQueryBuilder, new AsyncCallback<List<Products>>() {
+                @Override
+                public void handleResponse(List<Products> response) {
+                    Set <Products> productsSet = new HashSet<>();
+                    Set <String> setNames = new HashSet<>();
+                    for (Products product: response) {
+                        if (!setNames.contains(product.getListName())) {
+                            setNames.add(product.getListName());
+                            productsSet.add(product);
+                        }
+                    }
+                    pickFriend(productsSet);
+                }
+
+                @Override
+                public void handleFault(BackendlessFault fault) {
+                    showToast("ERROR:" + fault.getMessage());
+                }
+            });
+
+        }
+
+        private void pickFriend(Set<Products> products) {
+            final String [] array = new String[products.size()];
+            int p = 0;
+            for (Products product: products)
+                array[p++] = product.getListName();
+
+            final int [] checkedItem = {0};
+            new AlertDialog.Builder((Context) context)
+                    .setTitle(ALERT_DIALOG2_TITLE)
+                    .setIcon(android.R.drawable.ic_dialog_info)
+                    .setSingleChoiceItems(array, checkedItem[0], new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            checkedItem[0] = i;
+                        }
+                    })
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            addSharedListToDb(array[checkedItem[0]], (int) itemView.getTag());
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, null)
+                    .show();
+        }
+
+        private void addSharedListToDb(String listName, int friendPos) {
+            BackendlessUser friend = friends.get(friendPos);
+            SharedLists sharedLists = new SharedLists();
+            sharedLists.setListName(listName);
+            sharedLists.setOwnerName(ApplicationClass.user.getProperty(_NAME).toString());
+            sharedLists.setFriendId(friend.getUserId());
+
+            Backendless.Data.of(SharedLists.class).save(sharedLists, new AsyncCallback<SharedLists>() {
+                @Override
+                public void handleResponse(SharedLists response) {
+                    showToast(LIST_HAS_BEED_SHARED);
+                }
+
+                @Override
+                public void handleFault(BackendlessFault fault) {
+                    showToast("ERROR" + fault.getMessage());
                 }
             });
         }

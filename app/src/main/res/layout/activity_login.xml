@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/colorPrimaryLight"
-    tools:context=".Login">
+    tools:context=".Activities.Login">
 
     <ProgressBar
         android:id="@+id/login_progress"
@@ -157,7 +157,8 @@
             android:onClick="tvReSendListener"
             android:text="Wyślij ponownie email aktywacyjny"
             android:textColor="#0000b2"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:visibility="gone" />
 
     </LinearLayout>
 

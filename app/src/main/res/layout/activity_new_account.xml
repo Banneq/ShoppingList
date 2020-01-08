@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/colorPrimaryLight"
-    tools:context=".NewAccount">
+    tools:context=".Activities.NewAccount">
 
     <ProgressBar
         android:id="@+id/login_progress"

@@ -17,6 +17,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/colorPrimaryDark"
             android:orientation="horizontal">
 
             <ImageButton
@@ -37,6 +38,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
+                    android:textColor="#FFFFFF"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -50,7 +52,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginTop="5dp" />
+                        android:layout_marginTop="5dp"
+                        android:textColor="#FFFFFF" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -60,8 +63,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
                 android:layout_weight="1"
                 app:srcCompat="@drawable/ic_friend_delete" />
+
+            <ImageView
+                android:id="@+id/ivShare"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/ic_share_list" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

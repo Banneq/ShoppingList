@@ -1,4 +1,4 @@
-package com.example.shoppinglist;
+package com.example.shoppinglist.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -8,8 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
-import android.media.AsyncPlayer;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,11 +20,15 @@ import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.DataQueryBuilder;
+import com.example.shoppinglist.ApplicationClass;
+import com.example.shoppinglist.RecyclerViewAdapters.FriendsRecyclerViewAdapter;
+import com.example.shoppinglist.Models.Friends;
+import com.example.shoppinglist.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FriendsManagement extends AppCompatActivity implements FriendsRecyclerViewAdapter.FriendsManagementContext{
+public class FriendsManagement extends AppCompatActivity implements FriendsRecyclerViewAdapter.FriendsManagementContext {
     private final static String NAV_BAR_TITLE = "Znajomi: ";
     private final static String ALERT_DIALOG_TITLE = "Dodaj znajomego.";
     private final static String TYPE_USER_NAME = "Wpisz nazwę użytkownika: ";

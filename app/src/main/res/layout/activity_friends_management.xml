@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/colorPrimaryLight"
-    tools:context=".FriendsManagement">
+    tools:context=".Activities.FriendsManagement">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_friends"

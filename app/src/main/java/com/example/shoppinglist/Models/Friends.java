@@ -1,4 +1,4 @@
-package com.example.shoppinglist;
+package com.example.shoppinglist.Models;
 
 public class Friends {
     public String getFriendId() {

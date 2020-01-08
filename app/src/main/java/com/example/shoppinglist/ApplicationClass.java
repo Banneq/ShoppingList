@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
+import com.example.shoppinglist.Models.Products;
 
 import java.util.ArrayList;
 import java.util.List;

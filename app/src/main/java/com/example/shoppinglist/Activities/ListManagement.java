@@ -1,4 +1,4 @@
-package com.example.shoppinglist;
+package com.example.shoppinglist.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.Menu;
@@ -18,11 +19,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
+import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.DataQueryBuilder;
+import com.example.shoppinglist.ApplicationClass;
+import com.example.shoppinglist.Models.SharedLists;
+import com.example.shoppinglist.RecyclerViewAdapters.ListRecyclerViewAdapter;
+import com.example.shoppinglist.Models.Products;
+import com.example.shoppinglist.R;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,16 +48,19 @@ public class ListManagement extends AppCompatActivity{
     private final static String ERROR = "Błąd: ";
     private final static String LOAD_LIST = "Załaduj listę";
     private final static String DOWNLOADING_LIST_NAMES = "Pobieranie nazw...proszę czekać...";
+    private final static String DOWNLOADING_SHARED_LIST_NAMES = "Pobieranie dzielonych list...";
     private final static String FILL_ALL_FIELDS = "Wypełnij wszystkie pola produktów!";
     private final static String NO_LISTS = "Brak list do wczytania.";
     private final static String CANNOT_SAVE_EMPTY_LIST = "Nie można zapisać pustej listy.";
     private final static String LIST_SAVED = "Lista pomyślnie zapisana.";
+    private final static String _NAME = "name";
 
     private View progressView, loginFormView;
     private TextView tvLoad;
     private RecyclerView rvProducts;
     private RecyclerView.Adapter rvAdapter;
     private Set <String> listNames;
+    private Set <SharedLists> sharedLists = new HashSet<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,7 +197,6 @@ public class ListManagement extends AppCompatActivity{
         String whereClause = "ownerId = '" + ApplicationClass.user.getUserId() + "'";
         DataQueryBuilder dataQueryBuilder = DataQueryBuilder.create();
         dataQueryBuilder.setWhereClause(whereClause);
-
         showProgress(true);
         tvLoad.setText(DOWNLOADING_LIST_NAMES);
 
@@ -194,18 +206,42 @@ public class ListManagement extends AppCompatActivity{
                 for (Products product: response) {
                     names.add(product.getListName());
                 }
-                showProgress(false);
-                runAlertList();
+                findSharedLists();
             }
 
             @Override
             public void handleFault(BackendlessFault fault) {
                 Toast.makeText(ListManagement.this, ERROR + fault.getMessage(), Toast.LENGTH_LONG).show();
-                showProgress(false);
             }
         });
 
         return names;
+    }
+
+    private void findSharedLists() {
+        String whereClause = "friendId = '" + ApplicationClass.user.getUserId() + "'";
+        DataQueryBuilder dataQueryBuilder = DataQueryBuilder.create();
+        dataQueryBuilder.setWhereClause(whereClause);
+
+        tvLoad.setText(DOWNLOADING_SHARED_LIST_NAMES);
+        Backendless.Persistence.of(SharedLists.class).find(dataQueryBuilder, new AsyncCallback<List<SharedLists>>() {
+            @Override
+            public void handleResponse(List<SharedLists> response) {
+                for (SharedLists sharedList: response) {
+                    listNames.add(sharedList.getListName());
+                }
+                sharedLists.addAll(response);
+                runAlertList();
+                showProgress(false);
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                showProgress(false);
+                showToast("ERROR: " + fault.getMessage());
+
+            }
+        });
     }
 
     private void runAlertList () {
@@ -217,7 +253,7 @@ public class ListManagement extends AppCompatActivity{
         }
 
 
-        new AlertDialog.Builder(this)
+         new AlertDialog.Builder(this)
                 .setTitle(PICK_LIST)
                 .setSingleChoiceItems(arrayListNames, checkedItem[0], new DialogInterface.OnClickListener() {
                     @Override
@@ -242,12 +278,20 @@ public class ListManagement extends AppCompatActivity{
     }
 
 
+
+
     private void loadListFromServer (String listName) {
-        String whereClause = "ownerId = '" + ApplicationClass.user.getUserId() +
-                "' AND listName = '" + listName + "'";
+        String whereClause = "(ownerId = '" + ApplicationClass.user.getUserId() +
+                "' AND listName = '" + listName + "')";
+        ArrayList <SharedLists> shared = new ArrayList<>(sharedLists);
+        for (int i = 0; i < shared.size(); i++) {
+            if (listName.equals(shared.get(i).getListName()) && shared.get(i).getFriendId().equals(ApplicationClass.user.getUserId())) {
+                whereClause += " OR (ownerId = '" + shared.get(i).getOwnerId() + "' AND listName = '" + shared.get(i).getListName() + "')";
+                break;
+            }
+        }
         DataQueryBuilder dataQueryBuilder = DataQueryBuilder.create();
         dataQueryBuilder.setWhereClause(whereClause);
-
         showProgress(true);
         tvLoad.setText(LIST_LOADING);
 

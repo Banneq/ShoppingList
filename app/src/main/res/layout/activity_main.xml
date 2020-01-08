@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/colorPrimaryLight"
-    tools:context=".MainActivity">
+    tools:context=".Activities.MainActivity">
 
     <ProgressBar
         android:id="@+id/login_progress"
@@ -32,9 +32,9 @@
 
 
     <LinearLayout
+        android:id="@+id/login_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/login_form"
         android:orientation="vertical">
 
         <ImageView
@@ -64,10 +64,22 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginBottom="10dp"
             android:background="@drawable/button_shape"
             android:onClick="btnFriendManagementListener"
             android:text="@string/friends_management"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/button_shape"
+            android:onClick="btnSettingsActivityListener"
+            android:text="@string/settings"
             android:textColor="#FFFFFF" />
     </LinearLayout>
 

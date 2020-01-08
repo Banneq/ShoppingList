@@ -1,11 +1,10 @@
-package com.example.shoppinglist;
+package com.example.shoppinglist.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,6 +15,8 @@ import android.widget.Toast;
 import com.backendless.Backendless;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
+import com.example.shoppinglist.ApplicationClass;
+import com.example.shoppinglist.R;
 
 import java.util.ArrayList;
 
@@ -61,6 +62,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void btnFriendManagementListener(View view) {
         Intent proceed = new Intent(MainActivity.this, FriendsManagement.class);
+        startActivity(proceed);
+    }
+
+    public void btnSettingsActivityListener (View view) {
+        Intent proceed = new Intent(MainActivity.this, Settings.class);
         startActivity(proceed);
     }
 

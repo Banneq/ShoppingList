@@ -1,8 +1,6 @@
-package com.example.shoppinglist;
+package com.example.shoppinglist.RecyclerViewAdapters;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.backendless.Backendless;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
+import com.example.shoppinglist.ApplicationClass;
+import com.example.shoppinglist.Models.Products;
+import com.example.shoppinglist.R;
 
 import java.util.List;
 
