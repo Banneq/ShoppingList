@@ -33,7 +33,6 @@ public class FriendsManagement extends AppCompatActivity implements FriendsRecyc
     private final static String NO_USER_IN_DB = "Operacja nie powiodła się, taki użytkownik nie istnieje!";
     private final static String FRIEND_ADDED_SUCCESSFULLY = "Dodano użytkownika do grona znajomych.";
     private final static String CANCEL = "Anuluj";
-    private final static String KEY_NAME = "name";
     private final static String CANNOT_ADD_YOURSELF = "Nie możesz dodać samego siebie.";
     private final static String USER_ALREADY_A_FRIEND = "Posiadasz już tę osobę w znajomych";
 
@@ -74,21 +73,20 @@ public class FriendsManagement extends AppCompatActivity implements FriendsRecyc
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         String newFriendsName = input.getText().toString();
-                        if (newFriendIsValid(newFriendsName))
-                            searchForUserInDb(newFriendsName);
+                        searchForUserInDb(newFriendsName);
                     }
                 })
                 .setNegativeButton(CANCEL, null)
                 .show();
     }
 
-    private boolean newFriendIsValid(String newFriendsName) {
-        if (newFriendsName.equals(ApplicationClass.user.getProperty(KEY_NAME))) {
+    private boolean newFriendIsValid(BackendlessUser user) {
+        if (user.getUserId().equals(ApplicationClass.user.getUserId())) {
             showToast(CANNOT_ADD_YOURSELF);
             return false;
         }
-        for (BackendlessUser user: friendsUsers) {
-            if (user.getProperty(KEY_NAME).equals(newFriendsName)) {
+        for (BackendlessUser userInDb: friendsUsers) {
+            if (userInDb.getUserId().equals(user.getUserId())) {
                 showToast(USER_ALREADY_A_FRIEND);
                 return false;
             }
@@ -107,8 +105,12 @@ public class FriendsManagement extends AppCompatActivity implements FriendsRecyc
                     showToast(NO_USER_IN_DB);
                     return;
                 }
-                friendsUsers.add(response.get(0));
-                addNewRelationship(response.get(0).getUserId());
+                BackendlessUser user = response.get(0);
+                if (newFriendIsValid(user)) {
+                    friendsUsers.add(user);
+                    addNewRelationship(user.getUserId());
+                }
+
             }
 
             @Override
@@ -133,7 +135,7 @@ public class FriendsManagement extends AppCompatActivity implements FriendsRecyc
             @Override
             public void handleFault(BackendlessFault fault) {
                 showToast("ERROR: " + fault.getMessage());
-                friendsUsers.remove(friends.size()-1);
+                friendsUsers.remove(friendsUsers.size()-1);
             }
         });
     }
